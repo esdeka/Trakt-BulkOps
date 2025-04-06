@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import json
 import requests
@@ -116,19 +117,28 @@ def remove_duplicate(history, type):
 
     entries = {}
     duplicates = []
+    duplicates_json = []
 
     for i in history[::-1]:
         if i[entry_type]['ids']['trakt'] in entries:
             if not keep_per_day or i['watched_at'].split('T')[0] == entries.get(i[entry_type]['ids']['trakt']):
                 duplicates.append(i['id'])
+                duplicates_json.append(i)
         else:
             entries[i[entry_type]['ids']['trakt']] = i['watched_at'].split('T')[0]
 
     if len(duplicates) > 0:
-        print('%s %s duplicates plays to be removed' % (len(duplicates), type))
+        print('%s %s duplicates plays to be removed from %s/%s (%s/plays)' % (len(duplicates), type, len(entries), len(history), type))
 
-        session.post(sync_history_url, json={'ids': duplicates})
-        print('%s %s duplicates successfully removed!' % (len(duplicates), type))
+        duplicates_log = f'{type}-duplicates-{datetime.now().strftime("%m%d%Y%H%M%S")}.json'
+        with open(duplicates_log, 'w') as output:
+                json.dump(duplicates_json, output, indent=4)
+                print(f'To be removed duplicates saved in file {duplicates_log}')
+
+        removeyn = input("Do you want to remove %s of %s? (y/n): "% (len(duplicates), type)).strip().lower() == 'y'
+        if removeyn:
+            session.post(sync_history_url, json={'ids': duplicates})
+            print('%s %s duplicates removed!' % (len(duplicates), type))
     else:
         print('No %s duplicates found' % type)
 
@@ -236,7 +246,7 @@ if __name__ == '__main__':
         types = ['movies', 'episodes']
     else:
         print("Invalid choice. Please enter '1', '2', or '3'.")
-        return
+        exit()
 
 
     # Do
