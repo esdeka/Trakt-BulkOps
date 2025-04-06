@@ -81,6 +81,4 @@ The script will guide you with the next steps. Depending on your selection, foll
 
 ## Credits 
 
-Based on https://github.com/anthony-foulfoin/trakt-tv-duplicates-removal which is based on https://gist.github.com/blaulan/50d462696bce5da9225b8d596a8c6fb4
-
-The script currently implements two key features that were of personal interest, but it is designed to be flexible and open to additional functionalities. Feel free to suggest new operations or improvements!
+Based on https://github.com/TheFacc/Trakt-BulkOps which is based on https://github.com/anthony-foulfoin/trakt-tv-duplicates-removal which is based on https://gist.github.com/blaulan/50d462696bce5da9225b8d596a8c6fb4
